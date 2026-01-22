@@ -5,3 +5,4 @@
 
 - Dynamic Programing
 - Git
+- Dictionary structure
