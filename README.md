@@ -5,4 +5,4 @@
 
 - Dynamic Programing
 - Git
-- [Dictionary structure](/TIL/Dictionary/dict.py)
+- [Dictionary structure](/Dictionary/dict.py)
