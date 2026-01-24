@@ -101,3 +101,44 @@ for num in range(len(user_data)):
 ## 출력
 print(f"잘못된 데이터로 구성된 유저의 수는 {count} 입니다.") # blocked 와 False 가 있던 유저 수 반환
 print(user_list) # 정상 데이터 출력
+
+#-------------------------------------------#
+
+number_of_book = 100
+
+many_user = [{'이름': '이진솔', '나이': 20}, {'이름': '허균', '나이': 16}, {'이름': '남혜인', '나이':25}]
+
+def decrease_book(num):
+    global number_of_book
+    number_of_book -= num
+
+name_list = []
+def rental_book(info):
+    # user_name = user_function(**info)
+    user_name_age_dict = {} # 청소 // 청소 안하면 똑같은 게 여러개 들어감
+
+    ## 밑의 for 문으로 만든 dictionary의 key 와 value 를 따로 뽑아내야 했는데 결국 실패했다.
+    ## .items() 메서드를 활용해서 튜플로 만든 후 꺼내려고 헀는데 왜인지 함수 밖에서는 dict인 변수를 인수로 함수에 집어넣으면 .items가 작동하지 않았다. 이 부분은 해결해야할 궁금증
+    ## .key() 메서드 또한 map() 함수와 같이 list로 뽑아주지 않으면 안되더라  
+    for i in many_user:
+        user_name_age_dict[i['이름']] = i['나이']
+    username_list = list(user_name_age_dict.keys()) 
+    
+    for i in username_list:
+        print(f'{i}님 환영합니다!')
+
+    ## 밑의 .get() 메서드를 주석처리 해뒀는데 바로 윗줄과 같은 결과 값이 나옴
+    ## 차이는 윗줄은 순서에 관계없이 인덱스 순서대로 뽑아내는 코드이고 아랫줄은 지정한 key 값의 밸류를 뽑아내는 코드이다.
+    ## .get() 을 사용해 인덱스 순으로 뽑아내려면 추가 for문을 사용해야함
+    ## 윗줄은 for문의 변수와 출력값의 변수, user_name_age_dict의 인풋값 등을 통일할 수 있어 더 좋은 것 같다.
+    for user_name in username_list:
+        num_rental_book = user_name_age_dict[user_name] // 10
+        # num_rental_book = user_dict.get(name_list[d]) // 10
+        decrease_book(num_rental_book)
+        print('남은 책의 수:', number_of_book)
+        print(f'{user_name}님이 {num_rental_book}권의 책을 대여하였습니다.')
+
+rental_book(1)
+
+### 출력은 만족스럽게 나오기는 하지만 retal_book 함수의 인수와 관계 없이 출력이 나온다. 인수를 넣어서 해결하는 방법을 모색해봐야 할듯
+### 
