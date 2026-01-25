@@ -6,3 +6,5 @@
 - Dynamic Programing
 - Git
 - [Dictionary structure](/Dictionary/dict.py)
+ - [.get()](/Dictionary/get.py)
+ 
