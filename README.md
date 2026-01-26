@@ -5,6 +5,9 @@
 
 - Dynamic Programing
 - Git
-- [Dictionary structure](/Dictionary/dict.py)
- - [.get()](/Dictionary/get.py)
- 
+- [Dictionary structure](/etc/Dictionary/dict.py)
+ - [.get()](/etc/Dictionary/get.py)
+- [Method](/etc/Method)
+ - [str](/etc/Method/str)
+ - [list](/etc/Method/list)
+- [copy]
