@@ -11,6 +11,7 @@
  - [str](/etc/syntax/Method/str)
  - [list](/etc/syntax/Method/list)
 - [classes](/etc/Classes)
+- [exception_handling](/etc/Exception/)
 
 ## Books
 
