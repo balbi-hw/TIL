@@ -5,14 +5,14 @@
 
 - Dynamic Programing
 - Git
-- [Dictionary structure](/etc/syntax/Dictionary/dict.py)
- - [.get()](/etc/syntax/Dictionary/get.py)
-- [Method](/etc/syntax/Method)
- - [str](/etc/syntax/Method/str)
- - [list](/etc/syntax/Method/list)
-- [classes](/etc/Classes)
-- [exception_handling](/etc/Exception/)
+- [Dictionary structure](etc/syntax/Dictionary/dict.py)
+ - [.get()](etc/syntax/Dictionary/get.py)
+- [Method](etc/syntax/Method)
+ - [str](etc/syntax/Method/str)
+ - [list](etc/syntax/Method/list)
+- [classes](etc/Classes)
+- [exception_handling](etc/Exception/)
 
 ## Books
 
-- [파이썬 알고리즘 인터뷰](/etc/Books/python_algo_interview/)
+- [파이썬 알고리즘 인터뷰](etc/Books/python_algo_interview/)
