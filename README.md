@@ -10,8 +10,7 @@
 - [Method](/etc/syntax/Method)
  - [str](/etc/syntax/Method/str)
  - [list](/etc/syntax/Method/list)
-- [copy]
-
+- [classes](/etc/Classes)
 
 ## Books
 
