@@ -55,6 +55,7 @@ for test_case in range(1, TC+1):
         print(f'#{test_case} -1')
         continue
 
+    # AI 방식대로 진행한다면
     # 따로 구할 필요 없다.
     diff = []
     for box in passed_box:
