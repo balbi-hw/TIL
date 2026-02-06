@@ -26,6 +26,19 @@ def mostCommonWord(paragraph: str, banned: list[str]) -> str:
     return counts.most_common(1)[0][0]
     # .most_common(n) 메서드는 객체 안에서 n번째 많은 순서만큼 출력한다. 뒤의 index는 1번째로 출력된 튜플 중 0번 튜플의 0번 인덱스 값
 
+    ###########
+    ## !!!!! ##
+    ## !!!!! ##
+    ###########
+    # .most_common()은 Counter()클래스의 메서드이다. 즉 counter()가 아닌 객체에는 사용할 수 없다. 그런데 counts 에는 사용했다. 왜일까?
+    # 그리고 counts를 출력해보면 딕셔너리 형태로 나오는데 어떻게 빈도수를 뽑아내는 most_common() 메서드를 사용할 수 있을까. 왜일까?
+    #
+    # 이는 객체 개념이 들어가있다. counts 의 값을 보면 collections.Counter()로 정의되어있다. 그럼 counts.most_common()이 입력되면
+    # counts가 collections.Counter()로 바뀌어 연산을 진행한다.
+    # 즉 counts.most_common(1)[0][0] == collections.Counter().most_common(1)[0][0]이 되는 것이다.
+    # 그 말은 counts가 collections.Counter 를 이용해 만들어진 dict가 아니고 그냥 같은 내용으로 정의된 변수였다면 .most_common() 메서드를 사용할 수 없다는 뜻
+    
+
 print(mostCommonWord(paragraph = "Bob hit a ball, the git BALL flew far after it was hit.", banned = ["hit"]))
 
 #-----------------------------------------#
