@@ -33,20 +33,40 @@ for test_case in range(1, tc + 1):
         # 0 만나면 브레이크
         # 다른 색 만나면 쭉
         # 같은 색 만나면 사이에 값 다 같은걸로 바꾸고 브레이크
-        for tempt in range(1, M):
-            for drow, dcol in dirs:
-                nrow, ncol = row + drow * tempt, col + dcol * tempt
-                if 0 <= nrow < M and 0 <= ncol < M:
-                    
-                else:
-                    break    
+        # for tempt in range(1, M):
+        #     for drow, dcol in dirs:
+        #         nrow, ncol = row + drow * tempt, col + dcol * tempt
+        #         if 0 <= nrow < M and 0 <= ncol < M:
+        #             if field[nrow][ncol] == 0:
+
+        #         else:
+        #             break    
         # while 문으로 설계해볼까?
         idx = 0
         while idx < 4:
             drow, dcol = dirs[idx]
-            
+            nrow, ncol = row + drow, col + dcol
+            if 0 <= nrow < M and 0 <= ncol < M:
+                if field[nrow][ncol] == 0:
+                    break
+                if field[nrow][ncol] != field[row][col]:
+                    change_lst = [field[nrow][ncol]]
+                    while 0 <= nrow < M and 0 <= ncol < M:
+                        nrow += drow
+                        ncol += dcol
 
+                        if field[nrow][ncol] == 0:
+                            break
+                        if field[nrow][ncol] == field[row][col]:
+                            for i in change_lst:
+                                i = colour
+                            idx += 1
+                            break
+                        change_lst.append(field[nrow][ncol])
+                if field[nrow][ncol] == field[row][col]:
+                    break
             idx += 1
+                
 
 
 
