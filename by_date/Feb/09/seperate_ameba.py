@@ -25,119 +25,283 @@ sys.stdin = open('seperate_ameba.txt')
 # 근데 그러면 삼중 리스트가 되는데..
 # 일단 해볼까
 
-dirs = [0, 
-    (0, 1), (-1, 0), (1, 0), (0, -1)
-] # 문제에서 우상하좌 순으로 제시
-# 1이 우라서 그냥 더미 0 하나 앞에 추가
+#####################################
+############### Fail ################
+#####################################
 
-TC = int(input())
+# ------------ 답지 ------------ #
 
-for test_case in range(1, TC+1):
-    pass
+# dr = (0, -1, 1, 0, 0)
+# dc = (0, 0, 0, -1, 1)
+# rev = (0, 2, 1, 4, 3)
+
+# T = int(input())
+# for tc in range(T):
+#     N, M, K = map(int, input().split())
+#     A = []
+#     for _ in range(K):
+#         A.append(list(map(int, input().split())))
+
+#     for _ in range(M):
+#         info = dict()
+#         for row in range(K):
+#             r, c, k, d = A[row]
+#             # k = 미생물 수, 미생물 수가 0이면 다음 인덱스로
+#             if not k:
+#                 continue
+#             # 이동할 좌표 설정
+#             nr = r + dr[d]
+#             nc = c + dc[d]
+#             # 이동
+#             A[row][0], A[row][1] = nr, nc
+#             # 이동한 곳이 경계라면
+#             if not (1 <= nr < N-1 and 1 <= nc < N-1):
+#                 # 수는 절반으로 방향은 반대로
+#                 A[row][2] //= 2
+#                 A[row][3] = rev[d]
+#             # 이동한 좌표에 아무것도 없다면
+#             if (nr, nc) not in info.keys():
+#                 # 그냥 이동
+#                 info[(nr, nc)] = [row, k]
+#             # 뭔가 있으면
+#             else:
+#                 # 그 지점의 위치와 미생물의 수를 확인
+#                 num, size = info[(nr, nc)]
+#                 # 새로 오는 군집과 수를 비교, 새로 오는 녀석이 더 크면
+#                 if A[row][2] > size:
+#                     # 정보 갱신, 수와 방향을 새로 오는 녀석의 것으로
+#                     info[(nr, nc)] = [row, A[row][2]]
+#                     # 그 후 수를 합치고
+#                     A[row][2] += A[num][2]
+#                     # 병합된 미생물의 수 정보를 0으로 갱신
+#                     A[num][2] = 0
+#                 # 새로 오는 놈이 더 작으면
+#                 else:
+#                     # 반대로, 방향은 그대로
+#                     A[num][2] += A[row][2]
+#                     A[row][2] = 0
+#     # 총 수 변수
+#     microbe = 0
+#     # 리스트를 순회하며
+#     for m in A:
+#         # 미생물 수만 종합
+#         microbe += m[2]
+#     print("#{} {}".format(tc+1, microbe))
+
+# --------------- 개선할 사항 ---------------- #
+
+'''
+- 우선 처음에 정보 딕셔너리를 구상만하고 실행하지 않았던 것이 가장 뼈아프다. 왜 안될거라고 생각했을까? 그냥 한 번 해봤으면 됐을지도 모르는데
+- 방향을 반대로 전환할때 나는 방향 정보를 언패킹해서 음수를 씌우고 다시 패킹했는데 그럴 필요 없이 다음부터는 위 답지의 rev 를 차용하면 되겠다.
+- 시간이 지나며 좌표가 수정될 때마다 좌표리스트의 인덱스를 갱신하는 데 애를 먹었는데 자료를 두 개로 나누어 관리했으면 더 좋았을 것 같다.
+    - 두 개로 나눠서 관리하는 방법을 시도는 했으나 그 방향이 잘못되었었다.
+
+- 추가
+    - 인덱스를 객체를 나타내는 정보로 쓰네.. object[idx] 할 필요 없이 그냥 idx 자체가 어떤 object를 가리키는지 말해준다.
+     말로 잘 설명을 못하겠는데 지금까지 했던 일련의 과정들을 생략할 수 있다는 건 알았다.
+
+
+
+- 논리의 흐름은 틀리지 않았으나 저번 등산로 문제와 같이 또 기술이 모자랐다. 이런 부분은 시간이 지나면서 나아질 것이라고 생각한다.
+- 갈 수록 역시 로직을 구상하는 것보다 구현하는게 더 난이도가 높아지는 듯 하다.
+'''
+
+# ---------------- 리트 ------------------ #
+
+dirs = [0,
+    (-1, 0), (1, 0), (0, -1), (0, 1)
+]
+rev = [0, 2, 1, 4, 3]
+
+T = int(input())
+
+for tc in range(1, T+1):
     size, time, zerg = map(int, input().split())
-    matrix = [[0] * size for _ in range(size)]
-    
-    position = []
-    for ameba in range(zerg):
-        row, col, num, direction = map(int, input().split())
-        position.append((row, col))
-        matrix[row][col] = [direction, num] 
+    positions = [list(map(int, input().split())) for _ in range(zerg)]
 
+    for t in range(1, time + 1):
+        info = dict()
 
-    count = 0
-    # 다중 객체를 시뮬레이션 할 떄는 포지션을 절대 인덱스로 받아야 하는 것 같다.
-    for t in range(1, time+1):
-        # for row, col in position:
-        count = 0
-        for pos in range(len(position)):
-            # 이렇게 꺼내오면 나중에 위치가 변했을 때 갱신하기가 편하다
-            row, col = position[pos - count]
-            # [0]이 방향 [1]이 숫자
-            dr, dc = dirs[matrix[row][col][0]]
-            nr, nc = row + dr, col + dc
-            if nr == 0 or nr == size-1 or nc == 0 or nc == size-1:
-                matrix[row][col][1] //= 2
-                dr, dc = dirs[matrix[row][col][0]]
-                matrix[row][col][0] = dirs.index((-dr, -dc)) 
+        for idx in range(zerg):
+            r, c, k, d = positions[idx]
 
-            # 경계에 닿는 걸 먼저 처리해야하나본데
-            # 경계 범위는 어떻게 되지?
-            # 일단 row = 0, col = 0
-            # row = size-1 col = size-1
-            # 이렇게네
-            # 이 안에 들어가면 방향 반대고 수 // 2
-            # if nr == 0 or nr == size-1 or nc == 0 or nc == size-1:
-            #     # 일단 수 절반
-            #     # 이동하기 전에 줄여야겠다
-            #     # matrix[nr][nc][1] //= 2
-            #     matrix[row][col][1] //= 2
-            #     # 이제 방향
-            #     # matrix[nr][nc][0] = (matrix[nr][nc][0] + 2) %4 + 1
-            #     # 그냥 음수 먹이면 되네
-            #     # matrix[nr][nc][0] = -matrix[nr][nc][0]
-            #     # 반대됐다.
-            #     # 안된다.
-            #     # 그냥 분기를 두개로 나누자 # 귀찮아 # 언패킹해서 음수 먹여
-            #     dr, dc = dirs[matrix[row][col][0]]
-            #     # 이렇게 가면 어떤데?
-            #     dirs[matrix[nr][nc][0]] = dirs.index((-dr, -dc))
-
-            # 이동하며 숫자 이동
-            # 이동한 자리에 다른 군집이 있는지도 봐야하네, 추가하자
-            if matrix[nr][nc] == 0:
-                matrix[nr][nc] = matrix[row][col]
-                
-                # 경계 처리를 여기다가 해야하네
-                # if nr == 0 or nr == size-1 or nc == 0 or nc == size-1:
-                #     matrix[nr][nc][1] //= 2
-                #     dr, dc = dirs[matrix[row][col][0]]
-                #     matrix[nr][nc][0] = dirs.index((-dr, -dc)) 
-
-                # 원래 있던 자리 숫자 0
-                position[pos - count] = (nr, nc)
-                matrix[row][col] = 0
-                
-                if (row, col) in position:
-                    position.remove((row, col))
-                    count += 1
-                    
-            else: # 이미 다른 군집이 있으면 합쳐야해
-                # 숫자 비교부터 해야겠네
-                # 숫자는 합치고 방향은 더 큰쪽 방향으로
-                    # 여기서 처리하면 되네.
-                    # 이미 군집이 있으면 포지션에도 좌표가 있어야하는데..
-                    # 이동해서 온거면 없어도 되는구나
-                    # 와 미치겠네
-                    # 이동 표시도 해야하나본데  # 그냥 움직일때마다 위치를 갱신하는게 낫다
-
-
-                if matrix[nr][nc][1] < matrix[row][col][1]:
-                    matrix[nr][nc][1] += matrix[row][col][1]
-                    matrix[nr][nc][0] = matrix[row][col][0]
-                else:
-                    # else 처리 필요한가? 필요하네
-                    matrix[nr][nc][1] += matrix[row][col][1]
-                    # 방향은 그대로
-                position[pos - count] = (nr, nc)
-                if (row, col) in position:
-                    position.remove((row, col))
-                    count += 1
-
-                # 다짰나?
-    # nums =    # 지금 위치가 갱신이 안되고 있잖아?
-                # 포지션 값이 계속 그대일 것 같은데
-                # after_position 을 하나 만들까
-                # 그리고 포지션 불러올때마다 갱신
-    # time for문 끝나면 숫자 다 종합을 해야하는뎅
-    total = 0
-    for row in range(size):
-        for col in range(size):
-            if matrix[row][col] == 0:
+            if not k:
                 continue
-            else:
-                total += matrix[row][col][1]
 
-    print(f'#{test_case} {total}')
+            dr, dc = dirs[d]
+            nr, nc = r+dr, c+dc
+            positions[idx][0], positions[idx][1] = nr, nc
+
+            if not (1<= nr <size-1 and 1<= nc <size-1):
+                positions[idx][2] //= 2
+                positions[idx][3] = rev[d]
+
+            if (nr, nc) not in info.keys():
+                info[(nr, nc)] = [idx, positions[idx][2]]
+
+            else:
+                who, num = info[(nr, nc)]
+
+                if num < positions[idx][2]:
+                    info[(nr, nc)] = (idx, positions[idx][2])
+                    positions[idx][2] += positions[who][2]
+                    positions[who][2] = 0
+
+                else:
+                    positions[who][2] += positions[idx][2]
+                    positions[idx][2] = 0
+            pass
+
+    total = 0
+    for i in positions:
+        total += i[2]
+
+    print(f'#{tc} {total}')
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# dirs = [0, 
+#     (0, 1), (-1, 0), (1, 0), (0, -1)
+# ] # 문제에서 우상하좌 순으로 제시
+# # 1이 우라서 그냥 더미 0 하나 앞에 추가
+
+# TC = int(input())
+
+# for test_case in range(1, TC+1):
+#     pass
+#     size, time, zerg = map(int, input().split())
+#     matrix = [[0] * size for _ in range(size)]
+    
+#     position = []
+#     for ameba in range(zerg):
+#         row, col, num, direction = map(int, input().split())
+#         position.append((row, col))
+#         matrix[row][col] = [direction, num]
+
+
+#     # 다중 객체를 시뮬레이션 할 떄는 포지션을 절대 인덱스로 받아야 하는 것 같다.
+#     for t in range(1, time+1):
+#         # for row, col in position:
+#         count = 0
+#         # for pos in range(len(position)):
+#         while count < len(position):
+#             # 이렇게 꺼내오면 나중에 위치가 변했을 때 갱신하기가 편하다
+#             row, col = position[count]
+#             # [0]이 방향 [1]이 숫자
+#             dr, dc = dirs[matrix[row][col][0]]
+#             nr, nc = row + dr, col + dc
+#             if nr == 0 or nr == size-1 or nc == 0 or nc == size-1:
+#                 matrix[row][col][1] = matrix[row][col][1] // 2
+#                 dr, dc = dirs[matrix[row][col][0]]
+#                 matrix[row][col][0] = dirs.index((-dr, -dc)) 
+
+#             # 경계에 닿는 걸 먼저 처리해야하나본데
+#             # 경계 범위는 어떻게 되지?
+#             # 일단 row = 0, col = 0
+#             # row = size-1 col = size-1
+#             # 이렇게네
+#             # 이 안에 들어가면 방향 반대고 수 // 2
+#             # if nr == 0 or nr == size-1 or nc == 0 or nc == size-1:
+#             #     # 일단 수 절반
+#             #     # 이동하기 전에 줄여야겠다
+#             #     # matrix[nr][nc][1] //= 2
+#             #     matrix[row][col][1] //= 2
+#             #     # 이제 방향
+#             #     # matrix[nr][nc][0] = (matrix[nr][nc][0] + 2) %4 + 1
+#             #     # 그냥 음수 먹이면 되네
+#             #     # matrix[nr][nc][0] = -matrix[nr][nc][0]
+#             #     # 반대됐다.
+#             #     # 안된다.
+#             #     # 그냥 분기를 두개로 나누자 # 귀찮아 # 언패킹해서 음수 먹여
+#             #     dr, dc = dirs[matrix[row][col][0]]
+#             #     # 이렇게 가면 어떤데?
+#             #     dirs[matrix[nr][nc][0]] = dirs.index((-dr, -dc))
+
+#             # 이동하며 숫자 이동
+#             # 이동한 자리에 다른 군집이 있는지도 봐야하네, 추가하자
+#             if matrix[nr][nc] == 0:
+#                 matrix[nr][nc] = matrix[row][col]
+                
+#                 # 경계 처리를 여기다가 해야하네
+#                 # if nr == 0 or nr == size-1 or nc == 0 or nc == size-1:
+#                 #     matrix[nr][nc][1] //= 2
+#                 #     dr, dc = dirs[matrix[row][col][0]]
+#                 #     matrix[nr][nc][0] = dirs.index((-dr, -dc)) 
+
+#                 # 원래 있던 자리 숫자 0
+#                 position[count] = (nr, nc)
+#                 matrix[row][col] = 0
+#                 count += 1
+#                 # if (row, col) in position:
+#                 #     position.remove((row, col))
+                    
+#             else: # 이미 다른 군집이 있으면 합쳐야해
+#                 # 숫자 비교부터 해야겠네
+#                 # 숫자는 합치고 방향은 더 큰쪽 방향으로
+#                     # 여기서 처리하면 되네.
+#                     # 이미 군집이 있으면 포지션에도 좌표가 있어야하는데..
+#                     # 이동해서 온거면 없어도 되는구나
+#                     # 와 미치겠네
+#                     # 이동 표시도 해야하나본데  # 그냥 움직일때마다 위치를 갱신하는게 낫다
+                
+#                 # 먼저 와 있던 군집이 있으면 
+#                 # 1. 누가 더 큰지 판단한다.
+#                 # 2. 더 큰쪽을 살리고 더 작은 쪽의 숫자만 더 큰쪽에 추가한다.
+#                 # 3. 좌표를 수정한다.
+#                 # 4. 좌표를 set으로 관리하면? 좋은데.. 해보자 // 실패
+
+
+#                 if matrix[nr][nc][1] < matrix[row][col][1]:
+#                     matrix[nr][nc][1] += matrix[row][col][1]
+#                     matrix[nr][nc][0] = matrix[row][col][0]
+#                 else:
+#                     # else 처리 필요한가? 필요하네
+#                     matrix[nr][nc][1] += matrix[row][col][1]
+#                     # 방향은 그대로
+#                 position[count] = (nr, nc)
+#                 matrix[row][col] = 0
+#                 count += 1
+
+#                 # 다짰나?
+#     # nums =    # 지금 위치가 갱신이 안되고 있잖아?
+#                 # 포지션 값이 계속 그대일 것 같은데
+#                 # after_position 을 하나 만들까
+#                 # 그리고 포지션 불러올때마다 갱신
+#     # time for문 끝나면 숫자 다 종합을 해야하는뎅
+#     total = 0
+#     for row in range(size):
+#         for col in range(size):
+#             if matrix[row][col] == 0:
+#                 continue
+#             else:
+#                 total += matrix[row][col][1]
+
+#     print(f'#{test_case} {total}')
 
 
 
