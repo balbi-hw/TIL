@@ -72,18 +72,3 @@ for test_case in range(1, TC+1):
             count += 1
 
     print(f'#{test_case} {count}')
-
-
-
-
-
-        # for r, c in cells:
-        #     for seki, life in cells[(r, c)]:
-        #         life -= 1
-        #         if life == seki:
-        #             for dr, dc in dirs:
-        #                 nr, nc = r+dr, c+dc
-        #                 if (nr, nc) in cells:
-        #                     continue
-        #                 else:
-        #                     v[(nr, nc)] = seki
