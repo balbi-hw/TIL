@@ -3,30 +3,22 @@
 # SW 달리기 // SILVER III
 
 N = int(input())
-sodann = [list(map(int, input().split())) for _ in range(N)]
+T = [0]*N
+P = [0]*N
+for i in range(N):
+    T[i], P[i] = map(int, input().split())
 
-result = 0
+dp = [0] * (N + 1)
+
+for i in range(N-1, -1, -1):
+    dp[i] = dp[i+1]
+
+    if i + T[i] <= N:
+        dp[i] = max(dp[i], P[i] + dp[i + T[i]])
+
+print(dp[0])
+
 
 # 약간 dp인데
 # 수영장 회원권 문제랑 비슷함
 
-for i in range(N):
-    k, m = sodann[i]
-    if i + k > N:
-        m = 0
-        sodann[i] = [k, m]
-
-print(sodann)
-
-for idx in range(N):
-    k, m = sodann[idx]
-
-    sal = 0
-    if idx + k <= N:
-        for j in range(idx, idx+k):
-            sal += sodann[j][1]
-    print(sal)
-    if m >= sal:
-        result += m
-
-print(result)
