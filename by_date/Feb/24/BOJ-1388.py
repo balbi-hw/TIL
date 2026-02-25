@@ -9,31 +9,56 @@ dirs = [
 ]
 
 
-def bfs(r, c):
-    global N, M
+N, M = map(int, input().split())
+field = [list(input()) for _ in range(N)]
+visited = [[False]*M for _ in range(N)]
+count = 0
 
-    q = deque([(r, c)])
-    visited = [[False]*M for _ in range(N)]
-    visited[r][c] == True
-    count = 0
+def cango(r, c, nr, nc):
 
-    while q:
-        pr, pc = q.popleft()
-
-        for dr, dc in dirs:
-            nr, nc = pr+dr, pc+dc
-
-            if 0 <= nr < N and 0 <= nc < M:
-                if visited[nr][nc] == False:
-                    if field[nr][nc] == field[r][c]:
-                        q.append(nr, nc)
-                        visited[nr][nc] == True
-                    else:
-                        count += 1
-        
+    if not (0 <= nr < N and 0 <= nc < M):
+        return False
+    
+    if visited[nr][nc]:
+        return False
+    
+    if field[nr][nc] != field[r][c]:
+        return False
+    
+    return True
 
     pass
 
-N, M = map(int, input())
-field = [input() for _ in range(N)]
+def bfs(r, c):
+    global count
+
+    q = deque([(r, c)])
+    visited[r][c] = True
+    
+    while q:
+        r, c = q.popleft()
+
+        if field[r][c] == '|':
+            dir_lst = [0, 1]
+        else:
+            dir_lst = [2, 3]
+        
+        for idx in dir_lst:
+            dr, dc = dirs[idx]
+            nr, nc = r+dr, c+dc
+
+            if cango(r, c, nr, nc):
+                q.append((nr, nc))
+                visited[nr][nc] = True
+
+    pass
+
+
+for r in range(N):
+    for c in range(M):
+        if not visited[r][c]:
+            bfs(r, c)
+            count += 1
+
+print(count)
 
