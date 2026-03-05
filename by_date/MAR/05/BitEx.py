@@ -51,7 +51,9 @@ def bfs(r, c):
                 continue
 
             if code[nr][nc] == "0":
-                if code[nr+dr][nc+dc] == '0':
+                if code[nr][nc-1] != "0":
+                    pass
+                else:
                     continue
 
             visited[nr][nc] = True
@@ -172,7 +174,7 @@ for test_case in range(1, TC+1):
             run = 1
             for i in range(4):
                 for j in range(point, len(binary)):
-                    if j == len(binary):
+                    if j == len(binary)-1:
                         if binary[j] == binary[j-1]:
                             run += 1
                             num_lst[i] = run
