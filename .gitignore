@@ -170,4 +170,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# personal files
+tiwl.md
+
 # End of https://www.toptal.com/developers/gitignore/api/windows,java,intellij
