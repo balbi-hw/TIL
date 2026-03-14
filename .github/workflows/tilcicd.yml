@@ -1,5 +1,7 @@
 name: Build-README
 run-name: ${{ github.actor }} is writing til
+permissions:
+  contents: write
 on:
   push:
       branches:
