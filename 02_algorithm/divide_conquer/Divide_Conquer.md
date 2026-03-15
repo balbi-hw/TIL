@@ -72,3 +72,45 @@
       포인터를 사용해 정렬을 진행한다.
 
 
+'''
+호어 진행 | arr = [5, 4, 6, 2, 1]
+5, 4, 6, 2, 1 | start = 0, left = 1, right = 4
+
+Partition 함수 진입 후 포인터 확정
+start = 0, left = 2, right = 4
+left < right 이므로 둘 교환
+
+교환 후
+arr = [5, 4, 1, 2, 6] | start = 0, left = 2, right = 4
+
+교차하지 않았으니 다시 진행
+포인터 확정
+start = 0, left = 4, right = 3
+left > right 이므로 pivot 변경, right == 3 반환
+
+변경 후
+arr = [2, 4, 1, 5, 6]
+
+Partition 함수 재진입
+[1]
+arr = [2, 4, 1, 5, 6] | start = 0, left = 1, right = 2
+[2]
+arr = [2, 4, 1, 5, 6] | start = 4, left = 5, right = 4
+
+# [1]
+포인터 확정
+start = 0, left = 1, right = 2
+left < right
+arr = [2, 1, 4, 5, 6]
+
+반복 진행 후 포인터 확정
+start = 0, left = 2, right = 1
+left > right | pivot 변경
+arr = [1, 2, 4, 5, 6] | right ==1 반환
+
+# [2]
+left > right | right 4 반환 후 함수 종료
+
+정렬 완료
+arr = [1, 2, 4, 5, 6]
+'''
