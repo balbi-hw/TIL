@@ -6,11 +6,16 @@
 힘이 들 땐 힘을 내자. 
 
 
-_2 TILs and counting..._
+_4 TILs and counting..._
 
 ---
 
 ### Categories
 
+- [02_algorithm](#02_algorithm)
+
+### [02_algorithm](#02_algorithm)
+- [알고리즘 문제 정리](02_algorithm/LongTemplate.md)
+- [문제 정리](02_algorithm/ShortTemplate.md)
 
 
