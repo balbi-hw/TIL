@@ -172,8 +172,14 @@ $RECYCLE.BIN/
 
 # personal files
 tiwl.md
+input.txt
+
+## personal: java-basic
 java-basic-lecturecode
 java-basic-lecturepdf
-input.txt
+
+## personal: java-mid
+java-mid1-code
+java-mid1-pdf
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,java,intellij
