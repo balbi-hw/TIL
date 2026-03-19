@@ -6,13 +6,18 @@
 힘이 들 땐 힘을 내자. 
 
 
-_4 TILs and counting..._
+_6 TILs and counting..._
 
 ---
 
 ### Categories
 
+- [00_memo](#00_memo)
 - [02_algorithm](#02_algorithm)
+
+### [00_memo](#00_memo)
+- [일본은 디테일의 나라.](00_memo/Why_want_Japan.md)
+- [260318 로빈 멘토님 멘토링](00_memo/mentoring.md)
 
 ### [02_algorithm](#02_algorithm)
 - [알고리즘 문제 정리](02_algorithm/LongTemplate.md)
