@@ -17,7 +17,7 @@ jobs:
       with:
         fetch-depth: 0    
     - name: AutoFormat README
-      uses: cflynn07/github-action-til-autoformat-readme@1.2.4
+      uses: cflynn07/github-action-til-autoformat-readme@1.2.1
       with:
         description: |
           매일이 쌓여 한 달이 되고 한 달이 쌓여 일 년이 되고 일 년이 쌓여 인생이 된다고 생각합니다.
