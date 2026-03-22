@@ -1,26 +1,37 @@
 name: Build-README
 run-name: ${{ github.actor }} is writing til
+
 permissions:
   contents: write
+
 on:
   push:
-      branches:
+    branches:
       - master
-      paths-ignore:
+    paths-ignore:
       - README.md
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Check out repo
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0    
-    - name: AutoFormat README
-      uses: cflynn07/github-action-til-autoformat-readme@1.2.1
-      with:
-        description: |
-          매일이 쌓여 한 달이 되고 한 달이 쌓여 일 년이 되고 일 년이 쌓여 인생이 된다고 생각합니다.
-          저는 매일매일 꾸준히 노력하는 사람이 되고 싶고, 되어 나가고 있습니다.
-          현우야, 힘이 들 땐 힘을 내자.
-        list_most_recent: 3
+      - name: Check out repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Debug repo
+        run: |
+          pwd
+          ls -la
+          git rev-parse --show-toplevel
+          git status
+
+      - name: AutoFormat README
+        uses: cflynn07/github-action-til-autoformat-readme@1.2.4
+        with:
+          description: |
+            매일이 쌓여 한 달이 되고 한 달이 쌓여 일 년이 되고 일 년이 쌓여 인생이 된다고 생각합니다.
+            저는 매일매일 꾸준히 노력하는 사람이 되고 싶고, 되어 나가고 있습니다.
+            현우야, 힘이 들 땐 힘을 내자.
+          list_most_recent: 3
