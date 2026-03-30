@@ -1,6 +1,5 @@
-package generic.test.ex4;
+package generic.ex4;
 
-import generic.animal.Animal;
 import generic.animal.Cat;
 import generic.animal.Dog;
 
