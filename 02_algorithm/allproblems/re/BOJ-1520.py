@@ -1,4 +1,5 @@
 # BOJ - 1520 내리막길
+# https://www.acmicpc.net/problem/1520
 
 """
 (0, 0) 에서 시작해 (N-1, N-1) 까지 이동
