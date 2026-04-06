@@ -1,10 +1,10 @@
 # TIL
 > Today I Learned
 
-매일이 쌓여 한 달이 되고 한 달이 쌓여 일 년이 되고 일 년이 쌓여 인생이 된다고 생각합니다.
-저는 매일매일 꾸준히 노력하는 사람이 되고 싶고, 되어 나가고 있습니다.
-현우야, 힘이 들 땐 힘을 내자.
-
+A collection of concrete writeups of small things I learn daily while working
+and researching. My goal is to work in public. I was inspired to start this
+repository after reading Simon Wilson's [hacker new post][1], and he was
+apparently inspired by Josh Branchaud's [TIL collection][2].
 
 _8 TILs and counting..._
 
