@@ -23,4 +23,4 @@
     - 앱 폴더 안에 Template 폴더를 만들고 그 안에 다시 앱 명으로 폴더를 만든 뒤 템플릿 파일을 만들어야 한다. 경로는 다음과 같다. ( 위 func 함수에서 두 번째 인자를 저렇게 넘겨주어서 그렇고 저기서 appname 을 제거하면 밑의 경로에서 appname 폴더를 제거해도 된다. Default 경로는 appname/templates 까지인 셈 )  
     `appname/templates/appname/template.html`  
 
-![흐름](/properties/RequestFlow.png)
+![흐름](../properties/RequestFlow.png)

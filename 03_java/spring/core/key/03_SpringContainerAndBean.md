@@ -1,6 +1,6 @@
 # ***스프링 컨테이너와 스프링 빈***
 
-아래 내용들의 실제 코드는 [bean-find](/src/test/java/hello/core/beanfind) 에 모두 있다! (XML 제외)
+아래 내용들의 실제 코드는 [bean-find](../src/test/java/hello/core/beanfind) 에 모두 있다! (XML 제외)
 
 ## 스프링 컨테이너 생성
 ```java
@@ -45,7 +45,7 @@ new AnnotationConfigApplicationContext(AppConfig.class)
 - `ac.getBeansOfType()` 을 사용하면 해당 타입의 모든 빈을 조회할 수 있다.
 
 ### 빈 조회 - 상속관계
-- 부모 타입을 조회하면 자식 타입도 모두 함께 조회한다. -> `Object`를 조회하면 모든 스프링 빈이 튀어나온다. ( 코드 확인 [상속](/src/test/java/hello/core/beanfind/ApplicationBeanContextExtendsFindTest.java))
+- 부모 타입을 조회하면 자식 타입도 모두 함께 조회한다. -> `Object`를 조회하면 모든 스프링 빈이 튀어나온다. ( 코드 확인 [상속](../src/test/java/hello/core/beanfind/ApplicationBeanContextExtendsFindTest.java))
 
 ### BeanFactory 와 ApplicationContext
 자바답게 이 컨테이너 또한 객체지향 원칙을 준수하는데 컨테이너의 최상위 인터페이스는 `BeanFactory`이다. 모든 빈을 관리하고 조회하며 `getBean()`을 포함해 지금까지 사용한 대부분의 기능은 이 `BeanFactory`에서 제공한다.  

@@ -2,7 +2,7 @@
 
 여타 다른 언어들은 MVC 디자인 패턴을 사용하는데 장고는 MTV 를 사용한다. 뭐가 다른걸까?
   
-![Nothing](/properties/Nothing.png)
+![Nothing](../properties/Nothing.png)
   
 다른게 없다. 그냥 이름만 다르다.
   
