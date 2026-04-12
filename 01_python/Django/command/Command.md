@@ -10,6 +10,10 @@
 `deactivate`
 - 터미널 끄면 자동 종료된다.
 
+4. pip
+- `pip freeze > requirements.txt`
+- `pip install -r requirements.txt`
+
 4. Django 프로젝트 생성
 `django-admin startproject firstpjt .`
 - `django-admin startproject`: 머였드라
