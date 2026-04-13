@@ -200,7 +200,7 @@ public class AllBeanTest {
     int discountPrice = discountService.discount(member, 10000, "fixDiscountPolciy");
   }
   
-  static class DIscountService {
+  static class DiscountService {
       private final Map<String, DiscountPolicy> policyMap;
       private final List<DiscountPolicy> policies;
       
@@ -208,7 +208,39 @@ public class AllBeanTest {
           this.policyMap = policyMap;
           this.policies = policies;
       }
+
+    public int discount(Member member, int price, String discountCode) {
+      DiscountPolicy discountPolicy = policyMap.get(discountCode);
+      return discountPolicy.discount(member, price);
+    }
   }
-  
 }
 ```
+`DiscountService`는 Map으로 모든 `DiscountPolicy`를 주입받는다. 이때 `fixDiscountPolicy`, `rateDiscountPolicy`가 주입된다. `discount()`메서드는 discountCode로 "fixDiscountPolicy"가 넘어오면 Map에서 `fixDiscountPolicy` 스프링 빈을 찾아서 실행한다. "rateDiscountPolicy" 가 넘어오면 `rateDiscountPolicy` 스프링 빈을 찾아서 실행한다.
+  
+1. `Map<String, DiscountPolicy>`: map의 키에 스프링 빈의 이름을 넣어주고 그 값으로 `DiscountPolicy`타입으로 조회한 모든 스프링 빈을 담아준다.
+2. `List<DiscountPolicy>`: `DiscountPolicy` 타입으로 조회한 모든 스프링 빈을 담아준다.
+3. 만약 해당하는 스프링 빈이 없으면 빈 컬렉션이나 Map을 주입한다.
+
+> **참고 - 스프링 컨테이너를 생성하면서 스프링 빈 등록하기**  
+> 스프링 컨테이너는 생성자에 클래스 정보를 받는다. 여기에 클래스 정보를 넘기면 해당 클래스가 스트링 빈으로 자동 등록된다.
+> `new AnnotationConfigApplicationContext(AutoAppConfig.class, DiscountService.class);`  
+> 이 코드는 2가지로 나누어 이해할 수 있다.
+> - `new AnnotationConfigApplicationContext()` 를 통해 스프링 컨테이너를 만든다.
+> - `AutoAppConfig.class`, `DiscountService.class`를 파라미터로 넘기면서 해당 클래스를 자동으로 스프링 빈에 등록한다.
+> 스프링 컨테이너를 생성하면서 해당 컨테이너에 `AutoAppConfig`, `DiscountService`를 빈으로 자동 등록하는 것이다.
+
+## 자동과 수동의 선택 기준
+**자동을 디폴트로 사용하자.**  
+스프링이 나오고 시간이 흐를 수록 점점 자동을 선호하는 추세다. 스프링은 `@Component`뿐만 아니라 `@Controller`, `@Service`, `@Repository`처럼 계층에 맞추어 일반적인 애플리케이션 로직을 자동으로 스캔할 수 있도록 지원한다. 거기에 더해서 최근 스프링 부트는 컴포넌트 스캔을 기본으로 사용하고 스프링 부트의 다양한 스프링 빈들도 조건이 맞으면 자동으로 등록하도록 설계했다.
+  
+과정이 번거롭기도 하고 설정 정보가 커지면 관리 그 자체로 큰 부담이 된다. 그리고 결정적으로 자동 빈 등록을 사용해도 OCP, DIP 를 지킬 수 있다는 점이 자동을 사용하는 이유이다.
+  
+**그럼 수동은 언제?**  
+애플리케이션은 크게 업무 로직과 기술 지원 로직으로 나누어진다.
+- 업무 로직: 웹을 지원하는 컨트롤러, 핵심 비즈니스 로직이 있는 서비스, 데이터 계층의 로직을 처리하는 리포지토 등이 모두 업무 로직이다. 보통 비즈니스 요구사항을 개발할 때 추가되거나 변경된다.
+- 기술 지원: 기술적인 문제나 공통 관심사(AOP)를 처리할 때 주로 이용된다. 데이터베이스 연결이나 공통 로그 처리 처럼 업무 로직을 지원하기 위한 하부 기술이나 공통 기술들이다.
+  
+업무 로직은 그 수도 매우 많고 어느정도 패턴이 존재하므로 자동 기능을 적극 사용하는 게 좋다. 문제가 발생하더라도 문제의 원인이 명확하게 드러난다는 점도 이유 중 하나이다.  
+반면 기술 지원 로직은 우선 수가 적고 애플리케이션 전반에 걸쳐 광범위한 영향을 미친다. 그리고 문제의 원인이 명확하게 드러나지 않는 경우가 많다는 점에서 수동으로 등록하는 것이 권장된다.  
+결국 유지보수를 위해 편한 것을 선택하는 것이다.
