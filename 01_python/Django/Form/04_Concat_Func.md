@@ -68,4 +68,4 @@ def update(request, pk):
   }
   return render(request, 'articles/update.html', context)
 ```
-아래 `else` 부분이 `edit` 이고 윗 부분이 `update` 로직이다.
+아래 `else` 부분이 `edit` 이고 윗 부분이 `update` 로직이다. 코드는 위에서부터 아래로 흐르지만 사실 아래부터 작성하는게 흐름에 맞다는 점을 기억하자. `edit` 을 통해 수정할 내용을 작성해야 `update`가 가능하다.
