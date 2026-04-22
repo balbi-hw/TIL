@@ -14,28 +14,169 @@ id 번호를 인덱스 값으로 쓰는 리스트를 만들고 그 리스트 안
 
 
 """
+from collections import deque
+
+
+# MAP = {
+#     1: 'one',
+#     2: 'two',
+#     3: 'three',
+#     4: 'four',
+#     5: 'five',
+# }
+
+
+# class LinkedList():
+#     def __init__(self):
+        
+#         pass
+
+#     def extend(self):
+#         pass
+
+
+
+"""
+
+개선할 사항
+
+1. 현재 member.score 와 team.member.score 가 안맞고 있음
+   인스턴스 score 변동을 team 점수 리스트에 반영해야한다. 아님 반대라도 해야한다.
+
+2. Team 의 update 메서드도 로직 개선 필
+
+둘 다 해결한 것 같은데
+
+1번 테케 15 ~ 17 번 쿼리 사이에 문제가 있음
+
+"""
+
+
+class Member():
+    def __init__(self, mID, mTeam, mScore):
+        self.mID = mID
+        self.mTeam = mTeam
+        self.mScore = mScore
+    
+    def get_id(self):
+        return self.mID
+
+    def get_team(self):
+        return self.mTeam
+
+    def get_score(self):
+        return self.mScore
+    
+    def set_score(self, mScore):
+        self.mScore = mScore
+
+
+class Team():
+    def __init__(self):
+        # LinkedList 로 구현
+        # self.one = []
+        # self.two = []
+        # self.three = []
+        # self.four = []
+        # self.five = []
+        self.members = [[] for _ in range(6)]
+
+    def get_members(self, mScore):
+        # if mScore == 1:
+        #     return self.one
+        # elif mScore == 2:
+        #     return self.two
+        # elif mScore == 3:
+        #     return self.three
+        # elif mScore == 4:
+        #     return self.four
+        # elif mScore == 5:
+        #     return self.five
+        return self.members[mScore]
+    
+    def update(self, mChangeScore):
+        if mChangeScore > 0:
+            for i in range(5, 1, -1):
+                val = i + mChangeScore
+                if val > 5:
+                    val = 5
+
+                if i != val:
+                    self.members[val].extend(self.members[i])
+                    for member in self.members[i]:
+                        member.set_score(val)
+                    self.members[i].clear()
+
+        elif mChangeScore < 0:
+            for i in range(1, 5):
+                val = i + mChangeScore
+                if val < 1:
+                    val = 1
+                
+                if i != val:
+                    self.members[val].extend(self.members[i])
+                    for member in self.members[i]:
+                        member.set_score(val)
+                    self.members[i].clear()
+        pass
+
+    def get_best(self):
+        # 5점 멤버들 중 번호가 가장 높은 멤버
+        # highest = 0
+        # for member in self.members[5]:
+        #     highest = max(highest, member.get_id())
+        # return highest
+        for i in range(5, 0, -1):
+            self.members[i].sort(key=lambda x: -x.mID)
+            for member in self.members[i]:
+                if not member:
+                    continue
+                elif FiredMemberList[member.mID]:
+                    continue
+                else:
+                    return member.mID
+            
+        return 1
+        pass
+
+
+MemberList = [None for _ in range(100_001)]
+FiredMemberList = [False] * 100_001
+TeamList = [Team() for _ in range(6)]
+
+'''
+MemberList[mId].get_team = 팀
+MemberList[mId].get_score = 점수
+'''
+
+
 
 def init():
-    global id_list, team_list, team_member
-
-    id_list = [[] for _ in range(100001)]
-    team_list = [0] * 6
-    team_member = [[] for _ in range(6)]
+    global MemberList, TeamList, FiredMemberList
+    MemberList = [None for _ in range(100_001)]
+    FiredMemberList = [False] * 100_001
+    TeamList = [Team() for _ in range(6)]
 
 
 def hire(mID, mTeam, mScore):
-    id_list[mID] = [mTeam, mScore]
-    team_member[mTeam].append(mID)
+    member = Member(mID, mTeam, mScore)
+    MemberList[mID] = member
+    # TeamList[mTeam][mScore].append(MemberList[mID])
+    TeamList[mTeam].get_members(mScore).append(member)
     pass
 
 def fire(mID):
-    team = id_list[mID][0]
-    team_member[team].remove(mID)
-    id_list[mID] = []
+    FiredMemberList[mID] = True
     pass
 
 def updateSoldier(mID, mScore):
-    id_list[mID][1] = mScore
+    member = MemberList[mID]
+    team = member.get_team()
+    if mScore != member.get_score():
+        TeamList[team].members[mScore].append(member)
+        TeamList[team].members[member.get_score()].remove(member)
+        member.set_score(mScore)
+
     pass
 
 
@@ -43,30 +184,13 @@ def updateSoldier(mID, mScore):
 핵심 병목 // 단순 for 문으로 처리해서 병목이 생겼다. 비트마스킹?
 """
 def updateTeam(mTeam, mChangeScore):
-
-    for i in team_member[mTeam]:
-        id_list[i][1] += mChangeScore
-
-        if id_list[i][1] > 5:
-            id_list[i][1] = 5
-        elif id_list[i][1] < 1:
-            id_list[i][1] = 1
+    # 여길 링크드 리스트로 병합
+    TeamList[mTeam].update(mChangeScore)
     pass
 
 def bestSoldier(mTeam):
-
-    """
-    이 sort 도 너무 비효율적인 것 같은데 어떻게 해결해야하지?
-    """
-    try:
-        team_member[mTeam].sort(key=lambda x: (-id_list[x][1], -x))
-    except IndexError:
-        pass
-    
-    # print(id_list[team_member[mTeam][0]])
-    # print(team_member[mTeam][0])
-    return team_member[mTeam][0]
-
+    # 람다로 시도해보자
+    return TeamList[mTeam].get_best()
     pass
 
 # 소스코드와 같은 디렉토리에 input.txt 파일을 생성해서 거기에 입력을 넣은 뒤 아래 주석을 지우면 편하게 실행 가능합니다 :)
@@ -107,6 +231,9 @@ def run():
             mTeam = line[1]
             userAns = bestSoldier(mTeam)
             ans = line[2]
+
+            print(userAns, ans)
+
             if userAns != ans:
                 isCorrect = False
         else:
