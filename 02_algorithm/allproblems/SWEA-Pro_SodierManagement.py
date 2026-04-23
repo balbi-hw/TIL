@@ -68,6 +68,7 @@ class Member():
         self.mID = mID
         self.mTeam = mTeam
         self.mScore = mScore
+        self.next = None
 
     def get_id(self):
         return self.mID
@@ -85,6 +86,7 @@ class Member():
 class Team():
     def __init__(self):
         self.members = [[] for _ in range(6)]
+
 
     def get_members(self, mScore):
         return self.members[mScore]
@@ -121,10 +123,17 @@ class Team():
                 for member in self.members[i]:
                     member.set_score(val)
                 self.members[i].clear()
+            
         
         pass
 
-    def get_best(self):
+    def get_best(self, mTeam):
+
+        """오프셋 다 적용하고 계산해야한다."""
+        for i in range(1, 6):
+            idx = i + TeamOffset[mTeam][i]
+            self.members[idx].extend(self.members[i])
+
         for i in range(5, 0, -1):
             self.members[i].sort(key=lambda x: -x.mID)
             for member in self.members[i]:
@@ -139,10 +148,41 @@ class Team():
         pass
 
 
+"""
+헤드, 트레일, 최고id, 메서드, 병합,
+"""
+
+class LinkedList():
+    def __init__(self):
+        self.first = None
+        self.last = None
+        self.size = 0
+    
+    """인덱스 유지할 필요 있나?"""
+    def add(self, member):
+        if self.first == None:
+            self.first = member
+        else:
+            self.first.next = member
+        self.last = member            
+        self.size += 1
+
+    def extend(self, linkedList):
+        if linkedList.first == None:
+            return
+        self.last.next = linkedList.first
+        self.size += linkedList.size
+        self.last = linkedList.last
+    
+
+
+    pass
+
+
 MemberList = [None for _ in range(100_001)]
 FiredMemberList = [False] * 100_001
 TeamList = [Team() for _ in range(6)]
-TeamOffset = [0] * 6
+TeamOffset = [[0] * 6 for _ in range(6)]
 
 
 def init():
@@ -150,10 +190,10 @@ def init():
     MemberList = [None for _ in range(100_001)]
     FiredMemberList = [False] * 100_001
     TeamList = [Team() for _ in range(6)]
-    TeamOffset = [0] * 6
+    TeamOffset = [[0] * 6 for _ in range(6)]
 
 def hire(mID, mTeam, mScore):
-    member = Member(mID, mTeam, mScore + TeamOffset[mTeam])
+    member = Member(mID, mTeam, mScore + TeamOffset[mTeam][0])
     MemberList[mID] = member
     TeamList[mTeam].get_members(mScore).append(member)
     pass
@@ -169,17 +209,23 @@ def updateSoldier(mID, mScore):
     #     TeamList[team].members[mScore].append(member)
     #     TeamList[team].members[member.get_score()].remove(member)
     #     member.set_score(mScore)
-    member.set_score(mScore + TeamOffset[member.team])
+    member.set_score(mScore + TeamOffset[member.mTeam])
 
     pass
 
 def updateTeam(mTeam, mChangeScore):
     # TeamList[mTeam].update(mChangeScore)
-    TeamOffset[mTeam] += mChangeScore
+    # TeamOffset[mTeam] += mChangeScore
+    for i in range(1, 6):
+        TeamOffset[mTeam][i] += mChangeScore
+        if i + TeamOffset[mTeam][i] > 5:
+            TeamOffset[mTeam][i] = 5 - i
+        elif i + TeamOffset[mTeam][i] < 1:
+            TeamOffset[mTeam][i] = 1 - i
     pass
 
 def bestSoldier(mTeam):
-    return TeamList[mTeam].get_best()
+    return TeamList[mTeam].get_best(mTeam)
     pass
 
 # 소스코드와 같은 디렉토리에 input.txt 파일을 생성해서 거기에 입력을 넣은 뒤 아래 주석을 지우면 편하게 실행 가능합니다 :)
