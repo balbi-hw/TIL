@@ -204,11 +204,6 @@ def fire(mID):
 
 def updateSoldier(mID, mScore):
     member = MemberList[mID]
-    # team = member.get_team()
-    # if mScore != member.get_score():
-    #     TeamList[team].members[mScore].append(member)
-    #     TeamList[team].members[member.get_score()].remove(member)
-    #     member.set_score(mScore)
     member.set_score(mScore + TeamOffset[member.mTeam])
 
     pass
