@@ -48,11 +48,11 @@ public class ItemController {
     }
 
     //상품 수정 - 권장
-    @PostMapping("/items/{itemId}/edit")
-    public String updateItemForm(@PathVariable Long itemId, @ModelAttribute("form") BookForm form) {
-        itemService.updateItem(itemId, form.getName(), form.getPrice(), form.getStockQuantity());
-        return "redirect:/items";
-    }
+//    @PostMapping("/items/{itemId}/edit")
+//    public String updateItemForm(@PathVariable Long itemId, @ModelAttribute("form") BookForm form) {
+//        itemService.updateItem(itemId, form.getName(), form.getPrice(), form.getStockQuantity());
+//        return "redirect:/items";
+//    }
 
 
     //상품 수정 - 비권장
