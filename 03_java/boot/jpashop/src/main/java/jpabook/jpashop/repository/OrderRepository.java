@@ -21,6 +21,30 @@ public class OrderRepository {
         return em.find(Order.class, id);
     }
 
+    public List<Order> findAllByString(OrderSearch orderSearch) {
+
+        return null;
+    }
+
+    public List<Order> findAllWithMemberDelivery() {
+        return em.createQuery(
+                "select o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class
+        ).getResultList();
+    }
+
+    public List<OrderSimpleQueryDto> findOrderDtos() {
+        return em.createQuery(
+                        "select o from Order o" +
+                                " join o.member m" +
+                                " join o.delivery d", OrderSimpleQueryDto.class)
+                .getResultList();
+
+
+
+    }
+
 //    public List<Order> findAll(OrderSearch orderSearch) {
 //        추후 QueryDsl 을 배우고 나서 다시 작성하자.
 //    }
