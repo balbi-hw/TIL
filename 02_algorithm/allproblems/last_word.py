@@ -1,87 +1,168 @@
+"""
+예외가 있다.
+
+7번 게임 까지는 패스.
+
+이후 게임들은 1라운드 확정 통과 -> 로직 문제 없음 ( 이후에도 통과가 있음 )
+
+로직은 문제 없는 것 같고
+
+예외가 몇 개 있나본데
+
+1. Palindrome : 단어 객체 최초 생성할 때 확인하고 있음.
+
+
+"""
+
+
+# 클래스
+class Word():
+
+    def __init__(self, word):
+        self.word = word
+
+        if word == word[::-1]:
+            self.reversed = True
+        else:
+            self.reversed = False
+
+    def reverse(self):
+        reversed_word = self.word[::-1]
+        new_word = Word(reversed_word)
+        new_word.reversed = True
+        return new_word
+
 
 # 전역변수
-wordList = {}
+word_dict = {}
+point_dict = {}
 player_nums = 0
 words_nums = 0
+out_player = []
 
 def init(N, M, mWords):
-    """
-    단어를 객체로 하면 필드가
-
-    class Word():
-        def init(self, word):
-            self.word = word
-            self.used_time = 0
-            self.revoked = False
-    
-        def use(self):
-            if word == word[::-1]:
-                self.used_time += 1        
-
-        def update(self):
-            if word == word[::-1]:
-                if self.used_time = 1:
-            if self.used_time = 2:
-                self.revoked = True
-    
-    """
-
     """
     1. dict 로 알파벳 별 리스트를 구현한다.
         for alphabet in "abcdefghijklmnopqrstuvwxyz"
             dict[alphabet] = []
     2. mWords 를 순회하며 분류한다.
     """
-    global wordList, player_nums, words_nums
+    global word_dict, point_dict, player_nums, words_nums, out_player
+
+    word_dict = {}
 
     for ch in "abcdefghijklmnopqrstuvwxyz":
-        wordList[ch] = []
+        word_dict[ch] = []
     
     player_nums = N
     words_nums = M
 
+    out_player = [False] * (N + 1)
+
     for word in mWords:
         ch = word[0]
-        wordList[ch].append(word.obj)
+        word = Word(word)
+        word_dict[ch].append(word)
 
-    for ch in wordList.keys():
-        wordList[ch].sort(key=lambda x: x.word)
 
     pass
 
 def playRound(mID, mCh):
-    """
-    1. mID 번 부터 mCh 로 시작하는 단어중 사전 순 정렬된 첫 번째를 선택
-    2. mID + 1 번 은 1번에서 선택한 단어의 마지막 Char 로 시작하는 단어를 선택
-    3. 단어가 리스트[mWords] 내에 없다면 탈락.
-    4. 다음 라운드 시작
-    5. 이전 라운드에서 선택됐던 단어들의 스펠링 순서를 뒤집어서 다시 mWords 에 넣은 후 시작.
-    6. 단어를 사용하면 뒤집는데 뒤집은 단어가 사용한 적이 있다면 폐기
-    7. 6을 일일히 기록하기 힘들다.
-        - 단어별로 사용 횟수를 기록해두고 palindrome 이라면 1번, 아니라면 2번 사용하면 폐기
-    8. mWords 가 빌때까지 진행.
-    """
-    """
-    자료구조 선택
+    global word_dict
 
-    단순 리스트로 충분할 것 같다.
-      - 단어를 찾아야하네, 찾는 게 일인 문제.
-    
-    알파벳마다 리스트를 하나씩 다 ?
-    """
-    global wordList
+    # print("정렬 전", word_dict)
+    for ch in word_dict.keys():
+        word_dict[ch].sort(key=lambda x: x.word)
+    # print("정렬 후", word_dict)
+        
 
-    cur_word_list = wordList
+    point_dict = {}
+    nxt_word_dict = {}
 
-    nxt_word_list = {}
+    for ch in "abcdefghijklmnopqrstuvwxyz":
+        point_dict[ch] = 0
+        nxt_word_dict[ch] = []
+        
+    cur_word_dict = word_dict
 
-    wordList = nxt_word_list
+    cur_player = mID
+    cur_ch = mCh
 
-    pass
+    while True:
+
+        # if out_player[cur_player]:
+        #     cur_player += 1
+        #     if cur_player > player_nums:
+        #         cur_player %= player_nums
+        #     continue
+
+        # print(f"{cur_player}번님의 차례입니다.")
+
+        pointer = point_dict[cur_ch]
+
+        try:
+            cur_word = cur_word_dict.get(cur_ch, None)[pointer]  # IndexError
+
+            # print(f"현재 단어: {cur_word.word}")
+            
+            reversed_word = cur_word.reverse()
+
+            ch = reversed_word.word[0]
+
+            point_dict[cur_ch] += 1
+            cur_ch = ch
+
+            if not cur_word.reversed:  # TypeError
+                nxt_word_dict[ch].append(reversed_word)
+
+        # except IndexError, TypeError:
+        except IndexError:
+            word_dict = nxt_word_dict
+
+            for ch in "abcdefghijklmnopqrstuvwxyz":
+                pointer = point_dict[ch]
+
+                # if ch not in word_dict:
+                #     word_dict[ch] = []
+
+                word_dict[ch].extend(cur_word_dict[ch][pointer:])
+
+            out_player[cur_player] = True
+            return cur_player
+        
+        # print("통과")
+        def get_next_player(cur_player):
+            cur_player += 1
+
+            if cur_player > player_nums:
+                cur_player = 1
+
+            while out_player[cur_player]:
+                cur_player += 1
+
+                if cur_player > player_nums:
+                    cur_player = 1
+
+            return cur_player
+        
+        cur_player = get_next_player(cur_player)
+        # cur_player += 1
+
+        # if cur_player > player_nums:
+        #     cur_player %= player_nums
+
+        # while out_player[cur_player]:
+        #     cur_player += 1
+
+        # if cur_player == player_nums:
+        #     continue
+        # else:
+        #     cur_player %= player_nums
+
 
 # 소스코드와 같은 디렉토리에 input.txt 파일을 생성해서 거기에 입력을 넣은 뒤 아래 주석을 지우면 편하게 실행 가능합니다 :)
-# fs = open("input.txt", "r")
-# input = fs.readline
+fs = open("input.txt", "r")
+input = fs.readline
 
 def run():
     ok = True
@@ -91,7 +172,7 @@ def run():
     init(N, M, mWords)
 
     cnt = int(input())
-    for _ in range(cnt):
+    for i in range(cnt):
         line = input().split()
 
         mID = int(line[0])
@@ -100,7 +181,10 @@ def run():
         ans = int(line[2])
 
         if ret != ans:
+            print(f"{i + 1} 라운드 {ret}가 탈락하였습니다. 정답은 {ans} 입니다.")
             ok = False
+        else:
+            print(f"{i + 1} 라운드 통과입니다.")
 
     return ok
 
