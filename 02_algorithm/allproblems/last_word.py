@@ -14,7 +14,6 @@
 
 """
 
-
 # 클래스
 class Word():
 
@@ -32,6 +31,7 @@ class Word():
         new_word.reversed = True
         return new_word
 
+### set 사용
 
 # 전역변수
 word_dict = {}
@@ -45,7 +45,7 @@ def init(N, M, mWords):
     1. dict 로 알파벳 별 리스트를 구현한다.
         for alphabet in "abcdefghijklmnopqrstuvwxyz"
             dict[alphabet] = []
-    2. mWords 를 순회하며 분류한다.
+    2. mWords 를 순회하며 분류한다. 
     """
     global word_dict, point_dict, player_nums, words_nums, out_player
 
@@ -72,9 +72,8 @@ def playRound(mID, mCh):
 
     # print("정렬 전", word_dict)
     for ch in word_dict.keys():
-        word_dict[ch].sort(key=lambda x: x.word)
+        word_dict[ch].sort(key=lambda x: x.word)  ### 시간 복잡도 ! 힙 !
     # print("정렬 후", word_dict)
-        
 
     point_dict = {}
     nxt_word_dict = {}
@@ -90,20 +89,10 @@ def playRound(mID, mCh):
 
     while True:
 
-        # if out_player[cur_player]:
-        #     cur_player += 1
-        #     if cur_player > player_nums:
-        #         cur_player %= player_nums
-        #     continue
-
-        # print(f"{cur_player}번님의 차례입니다.")
-
         pointer = point_dict[cur_ch]
 
         try:
             cur_word = cur_word_dict.get(cur_ch, None)[pointer]  # IndexError
-
-            # print(f"현재 단어: {cur_word.word}")
             
             reversed_word = cur_word.reverse()
 
@@ -115,15 +104,11 @@ def playRound(mID, mCh):
             if not cur_word.reversed:  # TypeError
                 nxt_word_dict[ch].append(reversed_word)
 
-        # except IndexError, TypeError:
         except IndexError:
             word_dict = nxt_word_dict
 
             for ch in "abcdefghijklmnopqrstuvwxyz":
                 pointer = point_dict[ch]
-
-                # if ch not in word_dict:
-                #     word_dict[ch] = []
 
                 word_dict[ch].extend(cur_word_dict[ch][pointer:])
 
@@ -146,6 +131,7 @@ def playRound(mID, mCh):
             return cur_player
         
         cur_player = get_next_player(cur_player)
+
         # cur_player += 1
 
         # if cur_player > player_nums:
@@ -181,10 +167,13 @@ def run():
         ans = int(line[2])
 
         if ret != ans:
-            print(f"{i + 1} 라운드 {ret}가 탈락하였습니다. 정답은 {ans} 입니다.")
             ok = False
-        else:
-            print(f"{i + 1} 라운드 통과입니다.")
+
+        # if ret != ans:
+        #     print(f"{i + 1} 라운드 {ret}가 탈락하였습니다. 정답은 {ans} 입니다.")
+        #     ok = False
+        # else:
+        #     print(f"{i + 1} 라운드 통과입니다.")
 
     return ok
 
